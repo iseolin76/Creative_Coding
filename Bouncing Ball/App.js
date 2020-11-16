@@ -14,6 +14,7 @@ class App {
     this.resize();
 
     this.ball = new Ball(this.stageWidth, this.stageHeight, 60, 15);
+    this.block = new Block(700, 30, 300, 450);
 
     //animation을 구동시키는 함수 호출
     window.requestAnimationFrame(this.animate.bind(this));
@@ -34,6 +35,7 @@ class App {
 
     this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
 
+    this.block.draw(this.ctx);
     this.ball.draw(this.ctx, this.stageWidth, this.stageHeight);
   }
 }
@@ -79,5 +81,42 @@ class Ball {
       this.vy *= -1;
       this.y += this.vy;
     }
+  }
+}
+
+class Block {
+  constructor(width, height, x, y) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.maxX = width + x;
+    this.maxY = height + y;
+  }
+
+  draw(ctx) {
+    const xGap = 80;
+    const yGap = 60;
+
+    ctx.fillStyle = '#ff384e'
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fill();
+
+    ctx.fillStyle = '#190f3a';
+    ctx.beginPath();
+    ctx.moveTo(this.maxX, this.maxY);
+    ctx.lineTo(this.maxX - xGap, this.maxY + yGap);
+    ctx.lineTo(this.x - xGap, this.maxY + yGap);
+    ctx.lineTo(this.x, this.maxY);
+    ctx.fill();
+
+    ctx.fillStyle = '#9d0919'
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x, this.maxY);
+    ctx.lineTo(this.x - xGap, this.maxY + yGap);
+    ctx.lineTo(this.x - xGap, this.maxY + yGap - this.height);
+    ctx.fill()
   }
 }
