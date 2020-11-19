@@ -31,7 +31,7 @@ class App {
     this.polygon = new Polygon(
       this.stageWidth / 2,
       this.stageHeight / 2,
-      this.stageHeight / 3,
+      this.stageHeight / 3.5,
       5
     );
   }
@@ -51,14 +51,14 @@ class App {
     this.moveX = 0;
     this.offsetX = e.clientX;
   }
-  
+
   onMove(e) {
     if (this.isDown) {
       this.moveX = e.clientX - this.offsetX;
       this.offsetX = e.clientX;
     }
   }
-  
+
   onUp(e) {
     this.isDown = false;
   }
@@ -96,7 +96,7 @@ class Polygon {
       const y = this.radius * Math.sin(angle * i);
 
       //(i == 0) ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      
+
       ctx.beginPath();
       ctx.arc(x, y, 30, 0, PI2, false);
       ctx.fill();
