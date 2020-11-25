@@ -1,9 +1,11 @@
+import { GlowParticle } from './GlowParticle.js';
+
 const COLORS = [
-  {r: 45, g: 74, b: 227}, //blue
-  {r: 250, g: 255, b: 89}, //yellow
-  {r: 255, g: 101, b: 248}, //pupple
-  {r: 44, g: 209, b: 252}, //skyblue
-  {r: 54, g: 233, b: 84} //green
+  { r: 45, g: 74, b: 227 }, //blue
+  { r: 250, g: 255, b: 89 }, //yellow
+  { r: 255, g: 101, b: 248 }, //pupple
+  { r: 44, g: 209, b: 252 }, //skyblue
+  { r: 54, g: 233, b: 84 } //green
 ];
 
 class App {
@@ -14,6 +16,7 @@ class App {
 
     this.pixelRatio = (window.devicePixelRatio > 1) ? 2 : 1;
 
+    //총 파티클 수 지정 및 반지름 지정
     this.totalParticles = 15;
     this.particles = [];
     this.maxRadius = 900;
@@ -33,15 +36,19 @@ class App {
     this.canvas.height = this.stageHeight * this.pixelRatio;
     this.ctx.scale(this.pixelRatio, this.pixelRatio);
 
+    //파티클 합성
     this.ctx.globalCompositeOperation = 'saturation';
 
+    //파티클 생성
     this.createParticles();
   }
 
+  //파티클 생성 함수
   createParticles() {
     let curColor = 0;
     this.particles = [];
 
+    //파티클을 totalParticles만큼 생성
     for (let i = 0; i < this.totalParticles; i++) {
       const item = new GlowParticle(
         Math.random() * this.stageWidth,
@@ -51,6 +58,7 @@ class App {
         COLORS[curColor]
       );
 
+      //다음 컬러가 없다면 0으로 초기화
       if (++curColor >= COLORS.length) {
         curColor = 0;
       }
@@ -74,59 +82,3 @@ class App {
 window.onload = () => {
   new App();
 };
-
-const PI2 = Math.PI * 2;
-
-class GlowParticle {
-  constructor(x, y, radius, rgb) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.rgb = rgb;
-
-    this.vx = Math.random() * 4;
-    this.vy = Math.random() * 4;
-
-    this.sinValue = Math.random();
-  }
-
-  animate(ctx, stageWidth, stageHeight) {
-    this.sinValue += 0.01;
-
-    this.radius += Math.sin(this.sinValue);
-
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if (this.x < 0) {
-      this.vx *= -1;
-      this.x += 10;
-    } else if (this.x >stageWidth) {
-      this.vx *= -1;
-      this.x -= 10;
-    }
-
-    if (this.y < 0) {
-      this.vy *= -1;
-      this.y += 10;
-    } else if (this.y >stageHeight) {
-      this.vy *= -1;
-      this.y -= 10;
-    }
-
-    ctx.beginPath();
-    const g = ctx.createRadialGradient(
-      this.x,
-      this.y,
-      this.radius * 0.01,
-      this.x,
-      this.y,
-      this.radius
-    );
-    g.addColorStop(0, `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, 1)`);
-    g.addColorStop(1, `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, 0)`);
-    ctx.fillStyle = g;
-    ctx.arc(this.x, this.y, this.radius, 0, PI2, false);
-    ctx.fill();
-  }
-}
